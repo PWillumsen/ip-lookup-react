@@ -52,7 +52,7 @@ function App() {
         <div className="flex flex-col items-center">
 
           <div className="text-white mt-3 text-2xl font-semibold">
-            IP Address Tracker
+            IP Address Lookup
           </div>
 
           {/* Input */}
@@ -62,6 +62,7 @@ function App() {
               <input
                 className='rounded-tl-lg rounded-bl-lg p-2 w-[290px] focus:outline-none'
                 type="text"
+                placeholder="Seach for any IP or domain"
                 id="input"
                 value={ip}
                 onChange={e => setIp(e.target.value)} />
