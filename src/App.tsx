@@ -5,57 +5,72 @@ import Info from './components/Info';
 
 interface ApiResponse {
   city: string,
+  country: string,
   isp: string,
   lat: number,
   lon: number,
   query: string,
   status: string,
-  timezone: string,
-  zip: string
+  message: string,
+}
+
+interface ApiError {
+  message: string,
+  status: string,
+  query: string
 }
 
 function App() {
 
   const [ip, setIp] = useState("");
   const [data, setData] = useState<ApiResponse>();
+  const [error, setError] = useState<ApiError | null>();
 
   useEffect(() => {
     getData()
   }, [])
 
   const getData = async () => {
-    const url = `http://ip-api.com/json/${ip}?fields=status,city,zip,lat,lon,timezone,isp,query`
+    const url = `http://ip-api.com/json/${ip}?fields=status,message,country,region,city,lat,lon,isp,query`;
     const res = await fetch(url).then(res => res.json());
-    setData(await res)
+    console.log(res);
+    if (res.status !== "success") {
+      setError(res);
+    } else { 
+      setError(null);
+      setData(await res); 
+    }
   }
 
   return (
     <>
       {/* Header Background */}
       <div className="bg-[url('../pattern-bg.png')]  
-      bg-no-repeat bg-auto h-60 z-50 relative">
+      bg-no-repeat bg-auto h-60 z-30 relative">
+        {/* <div className="h-60 w-full bg-gradient-to-r from-blue-200 to-cyan-400  opacity-40 absolute"></div> */}
 
         {/* Header text */}
         <div className="flex flex-col items-center">
 
-          <div className="text-white p-5 text-2xl font-semibold">
+          <div className="text-white mt-3 text-2xl font-semibold">
             IP Address Tracker
           </div>
 
           {/* Input */}
           <div
-            className="flex h-10 w-80">
-            <input
-              className='rounded-tl-lg rounded-bl-lg p-4 w-full focus:outline-none'
-              type="text"
-              name="inputBox"
-              id="input"
-              value={ip}
-              onChange={e => setIp(e.target.value)} />
-            <span
-              onClick={getData}
-              className='rounded-tr-lg rounded-br-lg bg-black
-               text-white text-2xl h-full px-3 hover:cursor-pointer'> › </span>
+            className="flex m-4 w-80">
+            <form onSubmit={(e) => { e.preventDefault(); getData() }}>
+              <input
+                className='rounded-tl-lg rounded-bl-lg p-2 w-[290px] focus:outline-none'
+                type="text"
+                id="input"
+                value={ip}
+                onChange={e => setIp(e.target.value)} />
+              <button
+                type="submit"
+                className='absolute rounded-tr-lg rounded-br-lg bg-black
+              text-white text-2xl h-10 px-3 hover:cursor-pointer'> › </button>
+            </form>
           </div>
         </div>
 
@@ -64,8 +79,7 @@ function App() {
           city={data.city}
           isp={data.isp}
           query={data.query}
-          timezone={data.timezone}
-          zip={data.zip}
+          country={data.country}
         />}
       </div>
 
