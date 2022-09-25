@@ -33,7 +33,6 @@ function App() {
   const getData = async () => {
     const url = `http://ip-api.com/json/${ip}?fields=status,message,country,region,city,lat,lon,isp,query`;
     const res = await fetch(url).then(res => res.json());
-    console.log(res);
     if (res.status !== "success") {
       setError(res);
     } else { 
